@@ -11,7 +11,6 @@ async function query(querySearch) {
 
   const res = await client.query(querySearch);
   await client.end();
-  console.log(res.rows);
   return res;
 }
 
