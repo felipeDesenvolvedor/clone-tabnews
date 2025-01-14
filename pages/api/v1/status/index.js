@@ -1,7 +1,19 @@
 import database from "infra/database.js";
 async function status(request, response) {
-  const res = await database.query("SELECT 1 + 1 as sum;");
-  response.status(200).json({ chave: "Acima da média" });
+  const updatedAt = new Date().toISOString();
+  const postgresVersion = await database.query("show server_version;");
+  const postgresMaxConnections = await database.query("show max_connections;");
+  const postgresUsedConnections = await database.query(
+    "SELECT count(*) from pg_stat_activity WHERE datname = 'local_db';",
+  );
+  response.status(200).json({
+    updated_at: updatedAt,
+    postgres_version: parseInt(postgresVersion.rows[0].server_version),
+    postgres_max_connections: parseInt(
+      postgresMaxConnections.rows[0].max_connections,
+    ),
+    postgres_used_connections: parseInt(postgresUsedConnections.rows[0].count),
+  });
 }
 
 export default status;
