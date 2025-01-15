@@ -3,9 +3,12 @@ async function status(request, response) {
   const updatedAt = new Date().toISOString();
   const postgresVersion = await database.query("show server_version;");
   const postgresMaxConnections = await database.query("show max_connections;");
+  const databaseName = request.query.databaseName;
   const postgresUsedConnections = await database.query(
-    "SELECT count(*) from pg_stat_activity WHERE datname = 'local_db';",
+    // "SELECT count(*) from pg_stat_activity WHERE datname = 'local_db';",
+    `SELECT count(*) from pg_stat_activity WHERE datname = '${databaseName}';`,
   );
+
   response.status(200).json({
     updated_at: updatedAt,
     postgres_version: parseInt(postgresVersion.rows[0].server_version),
