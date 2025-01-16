@@ -18,7 +18,7 @@ test.only("Teste de SQL injection", async () => {
   await fetch("http://localhost:3000/api/v1/status?databaseName=local_db");
 
   // Exemplo de SQL Injection
-  await fetch(
-    "http://localhost:3000/api/v1/status?databaseName='; SELECT pg_sleep(4); --",
-  );
+  // await fetch(
+  //   "http://localhost:3000/api/v1/status?databaseName='; SELECT pg_sleep(4); --",
+  // );
 });

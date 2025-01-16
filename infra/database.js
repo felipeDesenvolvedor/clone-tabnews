@@ -12,7 +12,7 @@ async function query(querySearch) {
     await client.connect();
     const res = await client.query(querySearch);
     return res;
-  } catch(error) {
+  } catch (error) {
     return error;
   } finally {
     await client.end();
