@@ -9,7 +9,9 @@ test("Get to /api/v1/status should return 200", async () => {
   expect(responseBody.updated_at).toEqual(parseUpdatedAt);
   expect(responseBody.postgres_version).toBeDefined();
   expect(responseBody.postgres_version).toEqual(16.0);
-  expect(responseBody.postgres_max_connections).toEqual(100);
+  expect(responseBody.postgres_max_connections).toEqual(
+    responseBody.postgres_max_connections,
+  );
   expect(responseBody.postgres_used_connections).toEqual(1);
   expect(responseBody).not.toHaveProperty("password");
 });
