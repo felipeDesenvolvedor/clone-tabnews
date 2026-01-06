@@ -6,7 +6,7 @@ async function query(querySearch) {
     user: process.env.POSTGRES_USER,
     database: process.env.POSTGRES_DB,
     password: process.env.POSTGRES_PASSWORD,
-    ssl: process.env.NODE_ENV === "development" ? false : true,
+    ssl: process.env.NODE_ENV === "production" ? true : false,
   });
   // Nessas variaveis de ambiente,
   // viram os valores de onde a aplicação estiver hospedada ou rodando
