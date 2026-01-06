@@ -6,7 +6,7 @@ async function query(querySearch) {
     user: process.env.POSTGRES_USER,
     database: process.env.POSTGRES_DB,
     password: process.env.POSTGRES_PASSWORD,
-    ssl: process.env.NODE_ENV === "production" ? true : false,
+    ssl: getSLLValues(),
   });
   // Nessas variaveis de ambiente,
   // viram os valores de onde a aplicação estiver hospedada ou rodando
@@ -24,3 +24,13 @@ async function query(querySearch) {
 export default {
   query: query,
 };
+
+function getSLLValues() {
+  if (process.env.POSTGRES_CA) {
+    return {
+      ca: process.env.POSTGRES_CA,
+    };
+  }
+
+  return process.env.NODE_ENV === "production" ? true : false;
+}
