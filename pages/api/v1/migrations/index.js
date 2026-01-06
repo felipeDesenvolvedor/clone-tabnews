@@ -1,9 +1,13 @@
 import migrationRunner from "node-pg-migrate";
 import { join } from "node:path";
+import database from "infra/database";
 
 // vai retornar as migrations que ainda não foram aplicadas
 export default async function migrations(request, response) {
+  const dbClient = await database.getNewClient();
+
   const migrationsRunnerConfig = {
+    dbClient: dbClient,
     databaseUrl: process.env.DATABASE_URL,
     dryRun: true,
     dir: join("infra", "migrations"),
@@ -14,6 +18,7 @@ export default async function migrations(request, response) {
 
   if (request.method === "GET") {
     const peddingMigrations = await migrationRunner(migrationsRunnerConfig);
+    await dbClient.end();
     return response.status(200).json(peddingMigrations);
   }
 
@@ -22,6 +27,8 @@ export default async function migrations(request, response) {
       ...migrationsRunnerConfig,
       dryRun: false,
     });
+
+    await dbClient.end();
 
     if (migratedMigrations.length > 0) {
       return response.status(201).json(migratedMigrations);
