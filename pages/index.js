@@ -50,7 +50,7 @@ function home() {
             Núbia Viana Santos,
           </p>
           <p style={{ ...styleP, "margin-top": "20px" }}>
-            Cada dia ao seu lado é especial na minha vida. Pensei em uma forma
+            Cada dia ao seu lado é especial na minha vida ! Pensei em uma forma
             de demonstrar isso e nada melhor do que uma carta sincera para
             registrar todos os meus sentimentos. O que eu sinto por você é
             incondicional e busco mil maneiras de te mostrar isso. Passamos por
