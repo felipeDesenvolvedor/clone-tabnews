@@ -10,7 +10,7 @@
     "services:down": "docker compose -f infra/compose.yaml down",
     "lint:check": "prettier --check .",
     "lint:fix": "prettier --write .",
-    "test": "npm run services:up && concurrently --names next,jest --hide next --kill-others --success command-jest 'next dev' 'jest --runInBand --verbose'",
+    "test": "npm run services:up && concurrently --names next,jest --hide next --kill-others --success command-jest \"next dev\" \"jest --runInBand --verbose\"",
     "test:watch": "jest --watchAll --runInBand",
     "migration:create": "node-pg-migrate create --migrations-dir ./infra/migrations",
     "migration-shurt:create": "node-pg-migrate create -m ./infra/migrations",
