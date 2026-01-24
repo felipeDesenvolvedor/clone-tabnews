@@ -5,7 +5,7 @@ import prettier from "eslint-config-prettier/flat";
 const eslintConfig = defineConfig([
   ...nextVitals,
   prettier,
-  globalIgnores([".next/**", "out/**", "build/**", "next-env.d.ts"]),
+  globalIgnores(["node_modules/**", ".next/**", "jsconfig.json"]),
   {
     rules: {
       "import/no-anonymous-default-export": "error",

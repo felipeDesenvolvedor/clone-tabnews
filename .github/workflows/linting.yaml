@@ -27,6 +27,5 @@ jobs:
       - run: npm run lint:eslint:check
       - uses: sibiraj-s/action-eslint@v4
         with:
-          eslint-args: "--ignore-path= .gitignore --quiet"
           extensions: "js, jsx, ts, tsx"
           annotations: true
