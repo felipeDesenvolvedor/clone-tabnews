@@ -6,6 +6,11 @@ const eslintConfig = defineConfig([
   ...nextVitals,
   prettier,
   globalIgnores([".next/**", "out/**", "build/**", "next-env.d.ts"]),
+  {
+    rules: {
+      "import/no-anonymous-default-export": "error",
+    },
+  },
 ]);
 
 export default eslintConfig;
