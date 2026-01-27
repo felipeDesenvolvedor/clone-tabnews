@@ -8,6 +8,7 @@ async function query(querySearch) {
     const res = await client.query(querySearch);
     return res;
   } catch (error) {
+    console.error("Database query error:", error);
     throw error;
   } finally {
     await client.end();
