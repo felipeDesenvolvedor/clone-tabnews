@@ -1,5 +1,6 @@
 import database from "infra/database.js";
 async function status(request, response) {
+  let teste;
   const updatedAt = new Date().toISOString();
 
   // 1) Query sem parâmetros - não passivel de SQL Injection
