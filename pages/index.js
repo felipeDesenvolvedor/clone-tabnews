@@ -1,5 +1,3 @@
-import Image from "next/image";
-
 function home() {
   const styleP = {
     margin: 0,
@@ -13,7 +11,6 @@ function home() {
       'Roboto, -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"',
   };
   const styleCallout = {
-    display: "inline-block",
     "border-radius": "8px",
     padding: "12px 15px",
     margin: "15px 0",
