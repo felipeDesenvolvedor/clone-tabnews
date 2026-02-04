@@ -63,7 +63,7 @@ function home() {
             Desejo que a nossa vida continue sendo de muita parceria,
             cumplicidade e essa conexão que só a gente tem. Amo fazer planos com
             você e amo mais ainda tudo o que construímos até aqui. Obrigado por
-            ser a minha esposa perfeita! Amo você!
+            ser a minha esposa perfeita! Amo você!!!
           </p>
 
           <p style={{ ...styleP, "margin-top": "20px" }}>
