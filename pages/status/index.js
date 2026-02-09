@@ -20,7 +20,7 @@ function StatusPage() {
 export default StatusPage;
 
 function UpdatedAt() {
-  const { data, isLoading } = useSWR("/api/v1/status", fetchApi, {
+  const { data } = useSWR("/api/v1/status", fetchApi, {
     refreshInterval: 2000,
   });
 
