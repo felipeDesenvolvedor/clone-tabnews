@@ -37,3 +37,14 @@ describe("Post /api/v1/migrations", () => {
     });
   });
 });
+
+describe("PUT /api/v1/migrations", () => {
+  describe("Anonymouns user", () => {
+    test("Running pending migrations with method not allowed", async () => {
+      const response1 = await fetch("http://localhost:3000/api/v1/migrations", {
+        method: "PUT",
+      });
+      expect(response1.status).toBe(405);
+    });
+  });
+});

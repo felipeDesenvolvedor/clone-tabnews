@@ -2,7 +2,7 @@ import { createRouter } from "next-connect";
 import migrationRunner from "node-pg-migrate";
 import { resolve } from "node:path";
 import database from "infra/database";
-import { InternalServerError } from "infra/errors.js";
+import { InternalServerError, MethodNotAllowedError } from "infra/errors.js";
 
 const router = createRouter();
 
@@ -10,6 +10,7 @@ router.get(migrationsHandler);
 router.post(migrationsHandler);
 
 export default router.handler({
+  onNoMatch: onNoMatchHandler,
   onError: onErrorHandler,
 });
 
@@ -23,16 +24,13 @@ function onErrorHandler(error, request, response) {
   response.status(500).json(publicObjectError);
 }
 
+function onNoMatchHandler(request, response) {
+  const publicObjectError = new MethodNotAllowedError();
+  response.status(publicObjectError.statusCode).json(publicObjectError);
+}
+
 // vai retornar as migrations que ainda não foram aplicadas
 async function migrationsHandler(request, response) {
-  const allowdMethods = ["GET", "POST"];
-
-  if (!allowdMethods.includes(request.method)) {
-    return response.status(405).json({
-      error: `Method ${request.method} not allowed`,
-    });
-  }
-
   let dbClient;
 
   try {
