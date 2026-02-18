@@ -1,4 +1,6 @@
 import { Client } from "pg";
+import { ServiceError } from "infra/errors.js";
+
 async function query(querySearch) {
   let client;
   // Nessas variaveis de ambiente,
@@ -8,9 +10,11 @@ async function query(querySearch) {
     const res = await client.query(querySearch);
     return res;
   } catch (error) {
-    console.log("\n Erro dentro do catch do database.js:");
-    console.error(error);
-    throw error;
+    const serviceErrorObject = new ServiceError({
+      cause: error,
+    });
+
+    throw serviceErrorObject;
   } finally {
     await client?.end();
   }
