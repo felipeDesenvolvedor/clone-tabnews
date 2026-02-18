@@ -1,45 +1,57 @@
+import { createRouter } from "next-connect";
+
 import database from "infra/database.js";
-import { InternalServerError } from "infra/errors.js";
+import { InternalServerError, MethodNotAllowedError } from "infra/errors.js";
 
-async function status(request, response) {
-  try {
-    const updatedAt = new Date().toISOString();
+const router = createRouter();
 
-    // 1) Query sem parâmetros - não passivel de SQL Injection
-    const postgresVersion = await database.query("show server_version;");
-    const postgresMaxConnections = await database.query(
-      "show max_connections;",
-    );
+router.get(getHandler);
 
-    // 2) Query com parâmetros fixos - mais flexivel e seguro contra SQL Injection, pois não aceita input dinâmico.
+export default router.handler({
+  onNoMatch: onNoMatchHandler,
+  onError: onErrorHandler,
+});
 
-    // 3) Query com parâmetros dinâmicos - seguro contra SQL Injection, pois utiliza prepared statements. Mas pode ser menos seguro se os parâmetros forem construídos dinamicamente de forma insegura.
-    const databaseName = process.env.POSTGRES_DB;
-    const postgresUsedConnections = await database.query(
-      // "SELECT count(*) from pg_stat_activity WHERE datname = 'local_db';",
-      {
-        text: "SELECT count(*)::int from pg_stat_activity WHERE datname = $1;",
-        values: [databaseName],
-      },
-    );
+function onErrorHandler(error, request, response) {
+  const publicObjectError = new InternalServerError({
+    cause: error,
+  });
 
-    response.status(200).json({
-      updated_at: updatedAt,
-      postgres_version: parseInt(postgresVersion.rows[0].server_version),
-      postgres_max_connections: parseInt(
-        postgresMaxConnections.rows[0].max_connections,
-      ),
-      postgres_used_connections: postgresUsedConnections.rows[0].count,
-    });
-  } catch (error) {
-    const publicObjectError = new InternalServerError({
-      cause: error,
-    });
-
-    console.log("\n Erro dentro do controller /status:");
-    console.error(publicObjectError);
-    response.status(500).json(publicObjectError);
-  }
+  console.log("\n Erro dentro do catch do next-connect:");
+  console.error(publicObjectError);
+  response.status(500).json(publicObjectError);
 }
 
-export default status;
+function onNoMatchHandler(request, response) {
+  const publicObjectError = new MethodNotAllowedError();
+  response.status(publicObjectError.statusCode).json(publicObjectError);
+}
+
+async function getHandler(request, response) {
+  const updatedAt = new Date().toISOString();
+
+  // 1) Query sem parâmetros - não passivel de SQL Injection
+  const postgresVersion = await database.query("show server_version;");
+  const postgresMaxConnections = await database.query("show max_connections;");
+
+  // 2) Query com parâmetros fixos - mais flexivel e seguro contra SQL Injection, pois não aceita input dinâmico.
+
+  // 3) Query com parâmetros dinâmicos - seguro contra SQL Injection, pois utiliza prepared statements. Mas pode ser menos seguro se os parâmetros forem construídos dinamicamente de forma insegura.
+  const databaseName = process.env.POSTGRES_DB;
+  const postgresUsedConnections = await database.query(
+    // "SELECT count(*) from pg_stat_activity WHERE datname = 'local_db';",
+    {
+      text: "SELECT count(*)::int from pg_stat_activity WHERE datname = $1;",
+      values: [databaseName],
+    },
+  );
+
+  response.status(200).json({
+    updated_at: updatedAt,
+    postgres_version: parseInt(postgresVersion.rows[0].server_version),
+    postgres_max_connections: parseInt(
+      postgresMaxConnections.rows[0].max_connections,
+    ),
+    postgres_used_connections: postgresUsedConnections.rows[0].count,
+  });
+}
