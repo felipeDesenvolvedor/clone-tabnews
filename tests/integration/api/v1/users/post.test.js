@@ -37,7 +37,7 @@ describe("Post /api/v1/users", () => {
       expect(Date.parse(response1Body.created_at)).not.toBeNaN();
       expect(Date.parse(response1Body.updated_at)).not.toBeNaN();
     });
-    test("With with duplicate email", async () => {
+    test("With duplicate 'email'", async () => {
       const response1 = await fetch("http://localhost:3000/api/v1/users", {
         method: "POST",
         headers: {
@@ -73,6 +73,44 @@ describe("Post /api/v1/users", () => {
         action: "Ultilize outro email para realizar o cadastro.",
         status_code: 400,
         message: "O email informado já está sendo utilizado.",
+      });
+    });
+    test("With duplicate 'username'", async () => {
+      const response1 = await fetch("http://localhost:3000/api/v1/users", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          username: "userduplicado1",
+          email: "userduplicado1@gmail.com",
+          password: "password123",
+        }),
+      });
+
+      expect(response1.status).toBe(201);
+
+      const response2 = await fetch("http://localhost:3000/api/v1/users", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          username: "userduplicado1",
+          email: "userduplicado2@gmail.com",
+          password: "password123",
+        }),
+      });
+
+      expect(response2.status).toBe(400);
+
+      const response2Body = await response2.json();
+
+      expect(response2Body).toEqual({
+        message: "O usuário informado já está sendo ultilizado.",
+        action: "Ultilize outro usuário para realizar o cadastro.",
+        name: "ValidationError",
+        status_code: 400,
       });
     });
   });
