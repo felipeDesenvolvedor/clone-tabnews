@@ -59,6 +59,26 @@ export class ValidationError extends Error {
     };
   }
 }
+export class NotFoundError extends Error {
+  constructor({ cause, message, action }) {
+    super(message || "Usuário não encontrado.", {
+      cause: cause,
+    });
+
+    this.name = "NotFoundError";
+    this.action = action || "Verifique se o nome de usuário está correto.";
+    this.statusCode = 404;
+  }
+
+  toJSON() {
+    return {
+      name: this.name,
+      action: this.action,
+      status_code: this.statusCode,
+      message: this.message,
+    };
+  }
+}
 export class ServiceError extends Error {
   constructor({ cause, message }) {
     super(message || "Serviço indisponível no momento.", {
